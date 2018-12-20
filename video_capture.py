@@ -58,22 +58,22 @@ if __name__ == '__main__':
             y = marker.center[1]
             txt = ''
 
-            if (x > BR[0][0] and x < BR[1][0] and y > BR[0][1] and y < BR[1][1]):
-                txt = "move BOTTOM RIGHT"
-            elif (x > BL[0][0] and x < BL[1][0] and y > BL[0][1] and y < BL[1][1]):
-                txt = "move BOTTOM LEFT"
+            if (x > TL[0][0] and x < TL[1][0] and y > TL[0][1] and y < TL[1][1]):
+                txt = "move TOP LEFT"
             elif (x > TR[0][0] and x < TR[1][0] and y > TR[0][1] and y < TR[1][1]):
                 txt = "move TOP RIGHT"
-            elif (x > TL[0][0] and x < TL[1][0] and y > TL[0][1] and y < TL[1][1]):
-                txt = "move TOP LEFT"
-            elif (x > B[0][0] and x < B[1][0] and y > B[0][1] and y < B[1][1]):
-                txt = "move BOTTOM"
+            elif (x > BL[0][0] and x < BL[1][0] and y > BL[0][1] and y < BL[1][1]):
+                txt = "move BOTTOM LEFT"
+            elif (x > BR[0][0] and x < BR[1][0] and y > BR[0][1] and y < BR[1][1]):
+                txt = "move BOTTOM RIGHT"
             elif (x > T[0][0] and x < T[1][0] and y > T[0][1] and y < T[1][1]):
                 txt = "move TOP"
-            elif (x > L[0][0] and x < L[1][0] and y > L[0][1] and y < L[1][1]):
-                txt = "move LEFT"
+            elif (x > B[0][0] and x < B[1][0] and y > B[0][1] and y < B[1][1]):
+                txt = "move BOTTOM"
             elif (x > R[0][0] and x < R[1][0] and y > R[0][1] and y < R[1][1]):
                 txt = "move RIGHT"
+            elif (x > L[0][0] and x < L[1][0] and y > L[0][1] and y < L[1][1]):
+                txt = "move LEFT"
             elif (x > S[0][0] and x < S[1][0] and y > S[0][1] and y < S[1][1]):
                 txt = "OK"
 
@@ -98,28 +98,20 @@ if __name__ == '__main__':
 
         # TL
         cv2.rectangle(overlay, TL[0], TL[1], (0, 0, 255), cv2.FILLED)
-
         # TR
         cv2.rectangle(overlay, TR[0], TR[1], (0, 0, 255), cv2.FILLED)
-
         # BL
         cv2.rectangle(overlay, BL[0], BL[1], (0, 0, 255), cv2.FILLED)
-
         # BR
         cv2.rectangle(overlay, BR[0], BR[1], (0, 0, 255), cv2.FILLED)
-
         # T
         cv2.rectangle(overlay, T[0], T[1], (0, 255, 255), cv2.FILLED)
-
         # B
         cv2.rectangle(overlay, B[0], B[1], (0, 255, 255), cv2.FILLED)
-
         # R
         cv2.rectangle(overlay, R[0], R[1], (0, 255, 255), cv2.FILLED)
-
         # L
         cv2.rectangle(overlay, L[0], L[1], (0, 255, 255), cv2.FILLED)
-
         # S
         cv2.rectangle(overlay, S[0], S[1], (0, 255, 0), cv2.FILLED)
 
