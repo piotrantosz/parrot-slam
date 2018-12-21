@@ -12,8 +12,8 @@ if __name__ == '__main__':
         frame_captured = False
 
     # Frame size
-    fW = int(capture.get(cv2.CAP_PROP_FRAME_WIDTH))  # 640
-    fH = int(capture.get(cv2.CAP_PROP_FRAME_HEIGHT))  # 360
+    fW = int(capture.get(cv2.CAP_PROP_FRAME_WIDTH))   # ar 2.0 : 640
+    fH = int(capture.get(cv2.CAP_PROP_FRAME_HEIGHT))  # ar 2.0 : 360
     # Frame center point
     fC = ((fW / 2), (fH / 2))
     # Safe area width/height
@@ -25,14 +25,12 @@ if __name__ == '__main__':
     # R - right
     # L - left
     # S - safe area / no movement
-    #
 
     # | TL | T. | TR |
     # |--------------|
-    # | L. | S. | R. |
+    # | L. | S. | R. |  2D VIEW
     # |--------------|
     # | BL | B. | BR |
-
 
     # [(x1, y1), (x2, y2)]
     # structure : [(,),(,)]
@@ -40,6 +38,10 @@ if __name__ == '__main__':
     # |<- x1,y1     |
     # |             |
     # |     x2,y2 ->|
+
+    # TODO
+    # test w. connection to drone
+    # add other axis (front, right left with stable axis Y)
 
     TL = [(0, 0), ((fW / 2) - (sWH / 2), (fH / 2) - (sWH / 2))]
     TR = [((fW / 2) + (sWH / 2), 0), (fW, (fH / 2) - (sWH / 2))]
