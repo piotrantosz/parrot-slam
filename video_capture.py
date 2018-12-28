@@ -1,8 +1,11 @@
 import cv2
-from ar_markers import detect_markers
+import sys
 
 if __name__ == '__main__':
     print('Press "q" to quit')
+
+    cascPath = sys.argv[1]
+    faceCascade = cv2.CascadeClassifier(cascPath)
     # capture = cv2.VideoCapture('tcp://192.168.1.1:5555')
     capture = cv2.VideoCapture(0)
 
@@ -12,7 +15,7 @@ if __name__ == '__main__':
         frame_captured = False
 
     # Frame size
-    fW = int(capture.get(cv2.CAP_PROP_FRAME_WIDTH))   # ar 2.0 : 640
+    fW = int(capture.get(cv2.CAP_PROP_FRAME_WIDTH))  # ar 2.0 : 640
     fH = int(capture.get(cv2.CAP_PROP_FRAME_HEIGHT))  # ar 2.0 : 360
     # Frame center point
     fC = ((fW / 2), (fH / 2))
@@ -45,7 +48,7 @@ if __name__ == '__main__':
 
     TL = [(0, 0), ((fW / 2) - (sWH / 2), (fH / 2) - (sWH / 2))]
     TR = [((fW / 2) + (sWH / 2), 0), (fW, (fH / 2) - (sWH / 2))]
-    BL = [(0, fH/2 + sWH / 2), ((fW / 2) - (sWH / 2), fH)]
+    BL = [(0, fH / 2 + sWH / 2), ((fW / 2) - (sWH / 2), fH)]
     BR = [((fW / 2) + (sWH / 2), (fH / 2) + (sWH / 2)), (fW, fH)]
     T = [((fW / 2 - sWH / 2), 0), ((fW / 2 + sWH / 2), (fH / 2 - sWH / 2))]
     B = [((fW / 2 - sWH / 2), (fH / 2 + sWH / 2)), ((fW / 2 + sWH / 2), fW)]
@@ -54,31 +57,44 @@ if __name__ == '__main__':
     S = [((fW / 2) - (sWH / 2), (fH / 2) - (sWH / 2)), (((fW / 2) - (sWH / 2) + sWH), ((fH / 2) - (sWH / 2)) + sWH)]
 
     while frame_captured:
-        markers = detect_markers(frame)
-        for marker in markers:
-            x = marker.center[0]
-            y = marker.center[1]
+        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+
+        faces = faceCascade.detectMultiScale(
+            gray,
+            scaleFactor=1.1,
+            minNeighbors=5,
+            minSize=(30, 30),
+            flags=cv2.CASCADE_SCALE_IMAGE
+        )
+
+        for (x, y, w, h) in faces:
+            faceCenter = ((x + w / 2), (y + h / 2))
+            faceCenterX = faceCenter[0]
+            faceCenterY = faceCenter[1]
+
+            # Draw a rectangle around the faces
+            cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
+
             txt = ''
 
-            if (x > TL[0][0] and x < TL[1][0] and y > TL[0][1] and y < TL[1][1]):
+            if (faceCenter[0] > TL[0][0] and faceCenter[0] < TL[1][0] and faceCenter[1] > TL[0][1] and faceCenter[1] < TL[1][1]):
                 txt = "move TOP LEFT"
-            elif (x > TR[0][0] and x < TR[1][0] and y > TR[0][1] and y < TR[1][1]):
+            elif (faceCenter[0] > TR[0][0] and faceCenter[0] < TR[1][0] and faceCenter[1] > TR[0][1] and faceCenter[1] < TR[1][1]):
                 txt = "move TOP RIGHT"
-            elif (x > BL[0][0] and x < BL[1][0] and y > BL[0][1] and y < BL[1][1]):
+            elif (faceCenter[0] > BL[0][0] and faceCenter[0] < BL[1][0] and faceCenter[1] > BL[0][1] and faceCenter[1] < BL[1][1]):
                 txt = "move BOTTOM LEFT"
-            elif (x > BR[0][0] and x < BR[1][0] and y > BR[0][1] and y < BR[1][1]):
+            elif (faceCenter[0] > BR[0][0] and faceCenter[0] < BR[1][0] and faceCenter[1] > BR[0][1] and faceCenter[1] < BR[1][1]):
                 txt = "move BOTTOM RIGHT"
-            elif (x > T[0][0] and x < T[1][0] and y > T[0][1] and y < T[1][1]):
+            elif (faceCenter[0] > T[0][0] and faceCenter[0] < T[1][0] and faceCenter[1] > T[0][1] and faceCenter[1] < T[1][1]):
                 txt = "move TOP"
-            elif (x > B[0][0] and x < B[1][0] and y > B[0][1] and y < B[1][1]):
+            elif (faceCenter[0] > B[0][0] and faceCenter[0] < B[1][0] and faceCenter[1] > B[0][1] and faceCenter[1] < B[1][1]):
                 txt = "move BOTTOM"
-            elif (x > R[0][0] and x < R[1][0] and y > R[0][1] and y < R[1][1]):
+            elif (faceCenter[0] > R[0][0] and faceCenter[0] < R[1][0] and faceCenter[1] > R[0][1] and faceCenter[1] < R[1][1]):
                 txt = "move RIGHT"
-            elif (x > L[0][0] and x < L[1][0] and y > L[0][1] and y < L[1][1]):
+            elif (faceCenter[0] > L[0][0] and faceCenter[0] < L[1][0] and faceCenter[1] > L[0][1] and faceCenter[1] < L[1][1]):
                 txt = "move LEFT"
-            elif (x > S[0][0] and x < S[1][0] and y > S[0][1] and y < S[1][1]):
+            elif (faceCenter[0] > S[0][0] and faceCenter[0] < S[1][0] and faceCenter[1] > S[0][1] and y < S[1][1]):
                 txt = "OK"
-
 
             font = cv2.FONT_HERSHEY_SIMPLEX
             textPosition = (10, 50)
@@ -92,8 +108,6 @@ if __name__ == '__main__':
                         fontScale,
                         fontColor,
                         lineType)
-
-            marker.highlite_marker(frame)
 
         overlay = frame.copy()
         opacity = 0.1

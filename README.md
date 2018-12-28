@@ -15,5 +15,5 @@ drone control api
 
 video capture / tracker
 
-    python video_capture.py 
+    python video_capture.py cascade.xml
     
