@@ -1,5 +1,5 @@
-# parrot ar marker follow
-Parrot AR 2.0 drone software for following AR markers
+# parrot face detection follow
+Parrot AR 2.0 drone software for following human faces
 
 ## Configuration
 To use _ps_drone.py_ on mac:
