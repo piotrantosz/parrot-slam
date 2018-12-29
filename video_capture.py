@@ -1,13 +1,19 @@
 import cv2
 import sys
+import api.libardrone as libardrone
+import time
 
 if __name__ == '__main__':
     print('Press "q" to quit')
 
     cascPath = sys.argv[1]
     faceCascade = cv2.CascadeClassifier(cascPath)
-    # capture = cv2.VideoCapture('tcp://192.168.1.1:5555')
-    capture = cv2.VideoCapture(0)
+    capture = cv2.VideoCapture('tcp://192.168.1.1:5555')
+    # capture = cv2.VideoCapture(0)
+
+    drone = libardrone.ARDrone()
+    drone.trim()
+    drone.takeoff()
 
     if capture.isOpened():
         frame_captured, frame = capture.read()
@@ -20,7 +26,7 @@ if __name__ == '__main__':
     # Frame center point
     fC = ((fW / 2), (fH / 2))
     # Safe area width/height
-    sWH = 80
+    sWH = 90
 
     # Expected drone movement depending on marker position
     # B - bottom
@@ -78,20 +84,32 @@ if __name__ == '__main__':
             txt = ''
 
             if (faceCenter[0] > TL[0][0] and faceCenter[0] < TL[1][0] and faceCenter[1] > TL[0][1] and faceCenter[1] < TL[1][1]):
+                drone.move_left()
+                drone.move_up()
                 txt = "move TOP LEFT"
             elif (faceCenter[0] > TR[0][0] and faceCenter[0] < TR[1][0] and faceCenter[1] > TR[0][1] and faceCenter[1] < TR[1][1]):
+                drone.move_right()
+                drone.move_up()
                 txt = "move TOP RIGHT"
             elif (faceCenter[0] > BL[0][0] and faceCenter[0] < BL[1][0] and faceCenter[1] > BL[0][1] and faceCenter[1] < BL[1][1]):
+                drone.move_left()
+                drone.move_down()
                 txt = "move BOTTOM LEFT"
             elif (faceCenter[0] > BR[0][0] and faceCenter[0] < BR[1][0] and faceCenter[1] > BR[0][1] and faceCenter[1] < BR[1][1]):
+                drone.move_right()
+                drone.move_down()
                 txt = "move BOTTOM RIGHT"
             elif (faceCenter[0] > T[0][0] and faceCenter[0] < T[1][0] and faceCenter[1] > T[0][1] and faceCenter[1] < T[1][1]):
+                drone.move_up()
                 txt = "move TOP"
             elif (faceCenter[0] > B[0][0] and faceCenter[0] < B[1][0] and faceCenter[1] > B[0][1] and faceCenter[1] < B[1][1]):
+                drone.move_down()
                 txt = "move BOTTOM"
             elif (faceCenter[0] > R[0][0] and faceCenter[0] < R[1][0] and faceCenter[1] > R[0][1] and faceCenter[1] < R[1][1]):
+                drone.move_right()
                 txt = "move RIGHT"
             elif (faceCenter[0] > L[0][0] and faceCenter[0] < L[1][0] and faceCenter[1] > L[0][1] and faceCenter[1] < L[1][1]):
+                drone.move_left()
                 txt = "move LEFT"
             elif (faceCenter[0] > S[0][0] and faceCenter[0] < S[1][0] and faceCenter[1] > S[0][1] and y < S[1][1]):
                 txt = "OK"
@@ -135,6 +153,7 @@ if __name__ == '__main__':
 
         cv2.imshow('Test Frame', frame)
         if cv2.waitKey(1) & 0xFF == ord('q'):
+            drone.land()
             break
         frame_captured, frame = capture.read()
 
